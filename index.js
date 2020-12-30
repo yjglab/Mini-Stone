@@ -1,22 +1,64 @@
-const p2Hero = document.querySelector(".p2-hero");
-const p2Deck = document.querySelector(".p2-deck");
-let p2DeckData = [];
-let p2HeroData = [];
-let p2Field = document.querySelector(".p2-cards");
-let p2FieldData = [];
-let p2Cost = document.querySelector(".p2-cost");
+const p2 = {
+  hero: document.querySelector(".p2-hero"),
+  deck: document.querySelector(".p2-deck"),
+  field: document.querySelector(".p2-cards"),
+  cost: document.querySelector(".p2-cost"),
+  deckData: [],
+  heroData: [],
+  fieldData: [],
+  selectedCard: null,
+  selectedCardData: null,
+};
 
-const p1Hero = document.querySelector(".p1-hero");
-const p1Deck = document.querySelector(".p1-deck");
-let p1DeckData = [];
-let p1HeroData = [];
-let p1Field = document.querySelector(".p1-cards");
-let p1FieldData = [];
-let p1Cost = document.querySelector(".p1-cost");
+const p1 = {
+  hero: document.querySelector(".p1-hero"),
+  deck: document.querySelector(".p1-deck"),
+  field: document.querySelector(".p1-cards"),
+  cost: document.querySelector(".p1-cost"),
+  deckData: [],
+  heroData: [],
+  fieldData: [],
+  selectedCard: null,
+  selectedCardData: null,
+};
 
 let turn = true;
 const turnBtn = document.querySelector(".turn-btn");
 
+function deckToField(data, whoseTurn) {
+  let obj = whoseTurn ? p1 : p2;
+  let currentCost = Number(obj.cost.textContent);
+  if (currentCost < data.cost) {
+    return "end";
+  }
+  let index = obj.deckData.indexOf(data);
+  obj.deckData.splice(index, 1);
+  obj.fieldData.push(data);
+  obj.deck.innerHTML = "";
+  obj.field.innerHTML = "";
+  obj.fieldData.forEach((data) => {
+    cardDomeConcat(data, obj.field);
+  });
+  obj.deckData.forEach((data) => {
+    cardDomeConcat(data, obj.deck);
+  });
+  data.field = true;
+  obj.cost.textContent = currentCost - data.cost;
+}
+
+function reprintScreen(whoseScreen) {
+  let obj = whoseScreen ? p1 : p2;
+  obj.deck.innerHTML = "";
+  obj.field.innerHTML = "";
+  obj.hero.innerHTML = "";
+  obj.fieldData.forEach((data) => {
+    cardDomeConcat(data, obj.field);
+  });
+  obj.deckData.forEach((data) => {
+    cardDomeConcat(data, obj.deck);
+  });
+  cardDomeConcat(obj.heroData, obj.hero, true);
+}
 function cardDomeConcat(data, dome, hero) {
   let card = document.querySelector(".card-hidden .card").cloneNode(true);
   card.querySelector(".card-cost").textContent = data.cost;
@@ -29,49 +71,93 @@ function cardDomeConcat(data, dome, hero) {
     heroName.textContent = "HERO";
     card.appendChild(heroName);
   }
-  card.addEventListener("click", (card) => {
+  card.addEventListener("click", () => {
     if (turn) {
       // P1의 턴
-      if (!data.whoseCard) {
+      if (card.classList.contains("card-turnover")) {
         return;
       }
-      let currentCost = Number(p1Cost.textContent);
-      if (currentCost <= data.cost) {
+      if (!data.whoseCard && p1.selectedCard) {
+        if (p1.cost.textContent >= 1) {
+          // 여기에 텍스트..
+          return; // 코스트를 다 쓰지 않으면 공격 불가
+        }
+        data.hp = data.hp - p1.selectedCardData.att;
+        if (data.hp <= 0) {
+          let index = p2.fieldData.indexOf(data);
+          if (index > -1) {
+            // 졸 사망 시
+            p2.fieldData.splice(index, 1);
+          } else {
+            // 영웅 사망 시
+            // 승리메시지
+            init(); // 셋타임아웃
+          }
+        }
+        reprintScreen(false);
+        p1.selectedCard.classList.remove("card-selected"); // 공격 종료
+        p1.selectedCard.classList.add("card-turnover");
+        p1.selectedCard = null;
+        p1.selectedCardData = null;
+        return;
+      } else if (!data.whoseCard) {
         return;
       }
-      let index = p1DeckData.indexOf(data);
-      p1DeckData.splice(index, 1);
-      p1FieldData.push(data);
-      p1Deck.innerHTML = "";
-      p1Field.innerHTML = "";
-      p1FieldData.forEach((data) => {
-        cardDomeConcat(data, p1Field);
-      });
-      p1DeckData.forEach((data) => {
-        cardDomeConcat(data, p1Deck);
-      });
-      p1Cost.textContent = currentCost - data.cost;
+      if (data.field) {
+        card.parentNode.parentNode.querySelectorAll(".card").forEach((card) => {
+          card.classList.remove("card-selected");
+        });
+        card.classList.add("card-selected");
+        p1.selectedCard = card;
+        p1.selectedCardData = data;
+      } else {
+        if (deckToField(data, true) !== "end") {
+          createP1Deck(1);
+        }
+      }
     } else {
       // P2의 턴
-      if (data.whoseCard) {
+      if (card.classList.contains("card-turnover")) {
         return;
       }
-      let currentCost = Number(p2Cost.textContent);
-      if (currentCost <= data.cost) {
+      if (data.whoseCard && p2.selectedCard) {
+        if (p2.cost.textContent >= 1) {
+          // 여기에 텍스트..
+          return; // 코스트를 다 쓰지 않으면 공격 불가
+        }
+        data.hp = data.hp - p2.selectedCardData.att;
+        if (data.hp <= 0) {
+          let index = p1.fieldData.indexOf(data);
+          if (index > -1) {
+            // 졸 사망 시
+            p1.fieldData.splice(index, 1);
+          } else {
+            // 영웅 사망 시
+            // 승리메시지
+            init(); // 셋타임아웃
+          }
+        }
+        reprintScreen(true);
+        p2.selectedCard.classList.remove("card-selected"); // 공격 종료
+        p2.selectedCard.classList.add("card-turnover");
+        p2.selectedCard = null;
+        p2.selectedCardData = null;
+        return;
+      } else if (data.whoseCard) {
         return;
       }
-      let index = p2DeckData.indexOf(data);
-      p2DeckData.splice(index, 1);
-      p2FieldData.push(data);
-      p2Deck.innerHTML = "";
-      p2Field.innerHTML = "";
-      p2FieldData.forEach((data) => {
-        cardDomeConcat(data, p2Field);
-      });
-      p2DeckData.forEach((data) => {
-        cardDomeConcat(data, p2Deck);
-      });
-      p2Cost.textContent = currentCost - data.cost;
+      if (data.field) {
+        card.parentNode.parentNode.querySelectorAll(".card").forEach((card) => {
+          card.classList.remove("card-selected");
+        });
+        card.classList.add("card-selected");
+        p2.selectedCard = card;
+        p2.selectedCardData = data;
+      } else {
+        if (deckToField(data, false) !== "end") {
+          createP2Deck(1);
+        }
+      }
     }
   });
 
@@ -79,27 +165,29 @@ function cardDomeConcat(data, dome, hero) {
 }
 function createP2Deck(num) {
   for (let i = 0; i < num; i++) {
-    p2DeckData.push(cardFactory(false, false));
+    p2.deckData.push(cardFactory(false, false));
   }
-  p2DeckData.forEach((data) => {
-    cardDomeConcat(data, p2Deck);
+  p2.deck.innerHTML = "";
+  p2.deckData.forEach((data) => {
+    cardDomeConcat(data, p2.deck);
   });
 }
 function createP1Deck(num) {
   for (let i = 0; i < num; i++) {
-    p1DeckData.push(cardFactory(false, true)); // hero-false, whoseCard-true
+    p1.deckData.push(cardFactory(false, true)); // hero-false, whoseCard-true
   }
-  p1DeckData.forEach((data) => {
-    cardDomeConcat(data, p1Deck);
+  p1.deck.innerHTML = "";
+  p1.deckData.forEach((data) => {
+    cardDomeConcat(data, p1.deck);
   });
 }
 function createP2Hero() {
-  p2HeroData = cardFactory(true, false);
-  cardDomeConcat(p2HeroData, p2Hero, true);
+  p2.heroData = cardFactory(true, false);
+  cardDomeConcat(p2.heroData, p2.hero, true);
 }
 function createP1Hero() {
-  p1HeroData = cardFactory(true, true); //hero-true, whoseCard-true
-  cardDomeConcat(p1HeroData, p1Hero, true);
+  p1.heroData = cardFactory(true, true); //hero-true, whoseCard-true
+  cardDomeConcat(p1.heroData, p1.hero, true);
 }
 
 function Card(hero, whose) {
@@ -109,6 +197,7 @@ function Card(hero, whose) {
     this.hp = Math.ceil(Math.random() * 5) + 25;
 
     this.hero = true;
+    this.field = true;
   } else {
     this.att = Math.ceil(Math.random() * 5);
     this.hp = Math.ceil(Math.random() * 5);
@@ -129,10 +218,26 @@ function init() {
   createP1Deck(5);
   createP2Hero();
   createP1Hero();
+  reprintScreen(true);
+  reprintScreen(false);
 }
 
 turnBtn.addEventListener("click", () => {
+  let obj = turn ? p1 : p2;
+  document.querySelector(".p2").classList.toggle("turn");
+  document.querySelector(".p1").classList.toggle("turn");
+  obj.field.innerHTML = "";
+  obj.hero.innerHTML = "";
+  obj.fieldData.forEach((data) => {
+    cardDomeConcat(data, obj.field);
+  });
+  cardDomeConcat(obj.heroData, obj.hero, true);
   turn = !turn;
+  if (turn) {
+    p1.cost.textContent = 10;
+  } else {
+    p2.cost.textContent = 10;
+  }
 });
 
 init();
