@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="reset.css" />
+    <title>Document</title>
+    <style>
+      * {
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+      .turn {
+        border: 2px solid black;
+      }
+      .p1,
+      .p2 {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 50px;
+      }
+
+      .p1-deck,
+      .p2-deck {
+        display: inline-block;
+        vertical-align: top;
+        width: 300px;
+
+        background-color: gainsboro;
+      }
+      .card {
+        width: 75px;
+        height: 120px;
+        display: inline-block;
+        position: relative;
+        border: 2px solid black;
+        margin-bottom: 10px;
+        background-color: white;
+      }
+      .card-att,
+      .card-hp,
+      .card-cost {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 30px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: inline-block;
+        position: absolute;
+        bottom: 0;
+        border: 2px solid black;
+      }
+      .card-cost {
+        bottom: auto;
+        top: 0;
+        left: 0;
+
+        background-color: aqua;
+      }
+      .card-att {
+        left: 0;
+        background-color: wheat;
+      }
+      .card-hp {
+        right: 0;
+        background-color: red;
+        color: white;
+      }
+      .card-name {
+        font-size: 12px;
+      }
+      .card-selected {
+        border: 2px solid red;
+      }
+      .card-turnover {
+        background-color: gray;
+      }
+      .card-hidden {
+        display: none;
+      }
+      .turn-btn {
+        float: right;
+        position: relative;
+        top: -23px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="p2">
+      <div>COST: <span class="p2-cost">10</span>/<span>10</span></div>
+      <div class="p2-hero"></div>
+      <div class="p2-cards" style="height: 150px"></div>
+    </div>
+    <div class="p2-deck">
+      <div>덱</div>
+    </div>
+    <hr />
+    <button class="turn-btn">TURN</button>
+    <div class="p1 turn">
+      <div class="p1-cards" style="height: 150px"></div>
+      <div class="p1-hero"></div>
+      <div>COST: <span class="p1-cost">10</span>/<span>10</span></div>
+    </div>
+    <div class="p1-deck">
+      <div>덱</div>
+    </div>
+    <div class="card-hidden">
+      <div class="card">
+        <div class="card-cost"></div>
+        <div class="card-att"></div>
+        <div class="card-hp"></div>
+      </div>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>
