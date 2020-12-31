@@ -69,8 +69,12 @@ function battle(card, data, whoseTurn) {
   if (card.classList.contains("card-turnover")) {
     return;
   }
-  let defenderCard = whoseTurn ? !data.mine : data.mine;
+  let defenderCard = whoseTurn ? !data.whoseCard : data.whoseCard;
   if (defenderCard && attacker.selectedCard) {
+    if (attacker.cost.textContent >= 1) {
+      // 여기에 텍스트..
+      return; // 코스트를 다 쓰지 않으면 공격 불가
+    }
     data.hp = data.hp - attacker.selectedCardData.att;
     if (data.hp <= 0) {
       let index = defender.fieldData.indexOf(data);
