@@ -97,7 +97,7 @@ function battle(card, data, whoseTurn) {
     return;
   }
   if (data.field) {
-    card.parentNode.parentNode.querySelectorAll(".card").forEach((card) => {
+    document.querySelectorAll(".card").forEach((card) => {
       card.classList.remove("card-selected");
     });
     card.classList.add("card-selected");
