@@ -8,24 +8,36 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="p2">
-      <div>COST: <span class="p2-cost">10</span>/<span>10</span></div>
-      <div class="p2-hero"></div>
-      <div class="p2-cards" style="height: 150px"></div>
+    <div class="screen-wrapper">
+      <div class="p2-wrapper">
+        <div class="p2-deck">
+          <div>덱</div>
+        </div>
+        <div class="cost-wrapper">
+          COST: <span class="p2-cost">10</span>/<span>10</span>
+        </div>
+        <div class="p2">
+          <div class="p2-hero"></div>
+          <div class="p2-cards"></div>
+        </div>
+      </div>
+      <!-- <hr /> -->
+      <div class="state-message">message</div>
+      <button class="turn-btn">TURN</button>
+      <div class="p1-wrapper">
+        <div class="p1 turn">
+          <div class="p1-cards"></div>
+          <div class="p1-hero"></div>
+        </div>
+        <div class="cost-wrapper">
+          COST: <span class="p1-cost">10</span>/<span>10</span>
+        </div>
+        <div class="p1-deck">
+          <div>덱</div>
+        </div>
+      </div>
     </div>
-    <div class="p2-deck">
-      <div>덱</div>
-    </div>
-    <hr />
-    <button class="turn-btn">TURN</button>
-    <div class="p1 turn">
-      <div class="p1-cards" style="height: 150px"></div>
-      <div class="p1-hero"></div>
-      <div>COST: <span class="p1-cost">10</span>/<span>10</span></div>
-    </div>
-    <div class="p1-deck">
-      <div>덱</div>
-    </div>
+
     <div class="card-hidden">
       <div class="card">
         <div class="card-cost"></div>

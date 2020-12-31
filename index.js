@@ -71,7 +71,7 @@ function battle(card, data, whoseTurn) {
   }
   let defenderCard = whoseTurn ? !data.whoseCard : data.whoseCard;
   if (defenderCard && attacker.selectedCard) {
-    if (attacker.cost.textContent >= 1) {
+    if (attacker.cost.textContent > 1) {
       // 여기에 텍스트..
       return; // 코스트를 다 쓰지 않으면 공격 불가
     }
