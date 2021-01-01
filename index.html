@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="index.css" />
     <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="variable.css" />
     <title>Document</title>
   </head>
   <body>
@@ -13,8 +14,8 @@
         <div class="p2-deck">
           <div>덱</div>
         </div>
-        <div class="cost-wrapper">
-          COST: <span class="p2-cost">10</span>/<span>10</span>
+        <div class="p2-cost-wrapper">
+          <span class="p2-cost">10</span>/<span style="font-size: 8px">10</span>
         </div>
         <div class="p2">
           <div class="p2-hero"></div>
@@ -22,15 +23,18 @@
         </div>
       </div>
       <!-- <hr /> -->
-      <div class="state-message">message</div>
-      <button class="turn-btn">TURN</button>
+      <div class="phase-screen"></div>
+      <div class="screen-middle">
+        <div class="state-message"></div>
+        <span class="turn-btn">TURN OVER</span>
+      </div>
       <div class="p1-wrapper">
         <div class="p1 turn">
           <div class="p1-cards"></div>
           <div class="p1-hero"></div>
         </div>
-        <div class="cost-wrapper">
-          COST: <span class="p1-cost">10</span>/<span>10</span>
+        <div class="p1-cost-wrapper">
+          <span class="p1-cost">10</span>/<span style="font-size: 8px">10</span>
         </div>
         <div class="p1-deck">
           <div>덱</div>

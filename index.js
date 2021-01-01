@@ -1,3 +1,5 @@
+const stateMsg = document.querySelector(".state-message");
+
 const p2 = {
   hero: document.querySelector(".p2-hero"),
   deck: document.querySelector(".p2-deck"),
@@ -25,6 +27,12 @@ const p1 = {
 let turn = true;
 const turnBtn = document.querySelector(".turn-btn");
 
+function textOff() {
+  setTimeout(() => {
+    stateMsg.textContent = "";
+    stateMsg.style.color = "white";
+  }, 1500);
+}
 function deckToField(data, whoseTurn) {
   let obj = whoseTurn ? p1 : p2;
   let currentCost = Number(obj.cost.textContent);
@@ -66,25 +74,33 @@ function reprintScreen(whoseScreen) {
 function battle(card, data, whoseTurn) {
   let attacker = whoseTurn ? p1 : p2;
   let defender = whoseTurn ? p2 : p1;
+
   if (card.classList.contains("card-turnover")) {
     return;
   }
   let defenderCard = whoseTurn ? !data.whoseCard : data.whoseCard;
   if (defenderCard && attacker.selectedCard) {
     if (attacker.cost.textContent > 1) {
-      // 여기에 텍스트..
+      stateMsg.textContent = "COST를 모두 사용하세요";
+      stateMsg.style.color = "aqua";
+      textOff();
       return; // 코스트를 다 쓰지 않으면 공격 불가
     }
+
+    // stateMsg.style.color = "white";
     data.hp = data.hp - attacker.selectedCardData.att;
     if (data.hp <= 0) {
       let index = defender.fieldData.indexOf(data);
       if (index > -1) {
-        // 졸 사망 시
+        stateMsg.textContent = "카드가 사망했습니다";
+        stateMsg.style.color = "white";
         defender.fieldData.splice(index, 1);
       } else {
-        // 영웅 사망 시
-        // 승리메시지
-        init(); // 셋타임아웃
+        stateMsg.textContent = "영웅이 사망하여 승리했습니다";
+        stateMsg.style.color = "white";
+        setTimeout(() => {
+          init(); // 셋타임아웃
+        }, 2000);
       }
     }
     reprintScreen(!whoseTurn);
@@ -117,10 +133,20 @@ function cardDomeConcat(data, dome, hero) {
 
   if (hero) {
     card.querySelector(".card-cost").style.display = "none";
+    card.style.backgroundColor = "rgb(111, 157, 255)";
+
     let heroName = document.createElement("div");
     heroName.textContent = "HERO";
     card.appendChild(heroName);
   }
+  if (data.hp > 4 && data.att > 4) {
+    card.style.backgroundColor = "rgb(255, 212, 71)";
+
+    //사운드
+  } else if (data.hp > 2 && data.att > 3) {
+    card.style.backgroundColor = "rgb(192, 153, 255)";
+  }
+  textOff();
   card.addEventListener("click", () => {
     battle(card, data, turn);
   });
@@ -144,6 +170,7 @@ function createP2Hero() {
 }
 function createP1Hero() {
   p1.heroData = cardFactory(true, true); //hero-true, whoseCard-true
+
   cardDomeConcat(p1.heroData, p1.hero, true);
 }
 
@@ -177,6 +204,9 @@ function init() {
   createP1Hero();
   reprintScreen(true);
   reprintScreen(false);
+  stateMsg.textContent = "게임을 시작합니다";
+  textOff();
+  // 데이터 비워야 할듯.
 }
 
 turnBtn.addEventListener("click", () => {
@@ -186,10 +216,19 @@ turnBtn.addEventListener("click", () => {
   reprintField(obj);
   reprintHero(obj);
   turn = !turn;
+
+  const phaseScreen = document.querySelector(".phase-screen");
+
   if (turn) {
+    stateMsg.textContent = "Player 1의 TURN";
+    textOff();
     p1.cost.textContent = 10;
+    phaseScreen.style.transform = "translateY(0%)";
   } else {
+    stateMsg.textContent = "Player 2의 TURN";
+    textOff();
     p2.cost.textContent = 10;
+    phaseScreen.style.transform = "translateY(-100%)";
   }
 });
 

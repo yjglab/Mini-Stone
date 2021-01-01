@@ -1,0 +1,11 @@
+:root {
+  --body-color: rgb(34, 34, 34);
+  --deck-color: rgb(19, 19, 19);
+  --phase-color: rgba(66, 66, 66, 0.568);
+}
+
+/* :root {
+    --body-color: rgb(32, 38, 71);
+    --deck-color: rgb(19, 23, 47);
+    --phase-color: rgb(50, 57, 95);
+  } */
