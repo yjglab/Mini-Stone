@@ -4,6 +4,7 @@
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   transition: 0.2s ease-in-out;
   font-weight: 700;
+  user-select: none;
 }
 body {
   background-color: var(--body-color);
@@ -225,5 +226,5 @@ body {
 }
 
 .color {
-  background-color: rgb(111, 157, 255);
+  background-color: rgb(59, 18, 40);
 }

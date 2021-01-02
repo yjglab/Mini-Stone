@@ -1,4 +1,7 @@
 const stateMsg = document.querySelector(".state-message");
+// const handleBikSound = () => {
+//   document.querySelector(".bikSound").play();
+// };
 
 const p2 = {
   hero: document.querySelector(".p2-hero"),
@@ -31,7 +34,7 @@ function textOff() {
   setTimeout(() => {
     stateMsg.textContent = "";
     stateMsg.style.color = "white";
-  }, 1500);
+  }, 3000);
 }
 function deckToField(data, whoseTurn) {
   let obj = whoseTurn ? p1 : p2;
@@ -86,21 +89,23 @@ function battle(card, data, whoseTurn) {
       textOff();
       return; // 코스트를 다 쓰지 않으면 공격 불가
     }
-
+    stateMsg.textContent = "적의 카드를 공격했습니다";
+    stateMsg.style.color = "white";
+    textOff();
     // stateMsg.style.color = "white";
     data.hp = data.hp - attacker.selectedCardData.att;
     if (data.hp <= 0) {
       let index = defender.fieldData.indexOf(data);
       if (index > -1) {
-        stateMsg.textContent = "카드가 사망했습니다";
+        stateMsg.textContent = "적의 카드가 사망했습니다";
         stateMsg.style.color = "white";
         defender.fieldData.splice(index, 1);
       } else {
         stateMsg.textContent = "영웅이 사망하여 승리했습니다";
         stateMsg.style.color = "white";
         setTimeout(() => {
-          init(); // 셋타임아웃
-        }, 2000);
+          init();
+        }, 3500);
       }
     }
     reprintScreen(!whoseTurn);
@@ -133,7 +138,7 @@ function cardDomeConcat(data, dome, hero) {
 
   if (hero) {
     card.querySelector(".card-cost").style.display = "none";
-    card.style.backgroundColor = "rgb(111, 157, 255)";
+    card.style.backgroundColor = "rgb(59, 18, 40)";
 
     let heroName = document.createElement("div");
     heroName.textContent = "HERO";
@@ -198,6 +203,13 @@ function cardFactory(hero, whose) {
 }
 
 function init() {
+  [p2, p1].forEach((item) => {
+    item.deckData = [];
+    item.heroData = [];
+    item.fieldData = [];
+    item.selectedCard = [];
+    item.selectedCardData = [];
+  });
   createP2Deck(5);
   createP1Deck(5);
   createP2Hero();
@@ -205,8 +217,8 @@ function init() {
   reprintScreen(true);
   reprintScreen(false);
   stateMsg.textContent = "게임을 시작합니다";
-  textOff();
-  // 데이터 비워야 할듯.
+  p1.cost.textContent = 10;
+  p2.cost.textContent = 10;
 }
 
 turnBtn.addEventListener("click", () => {
